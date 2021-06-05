@@ -1,0 +1,5 @@
+env
+.vscode
+trash_bin
+__pycache__
+tests
