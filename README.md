@@ -57,7 +57,7 @@ python manage.py runserver
 ### How To Use The API
 
 to create a new user send a POST request with json body like:
-
+```bash
 {
     "username": "ahmed7",
     "password": "0000",
@@ -65,26 +65,29 @@ to create a new user send a POST request with json body like:
     "is_owner": true,
     "phone": "010213554"
 } 
-
+```
 and to login use :
-
+```bash
 {
     "username": "ahmed",
     "password": "0000"
 }
-
+```
 to update the user info use a PUT request with json body as :
-
+```bash
 {
     "username": "ahmed7",
     "password": "0000",
     "phone": "010213555"
 }
+```
 NOTE: your request must at least contain username and password keys  
 
 to add new playgroun ensure you are login with an owner account and use a POST request with json body as:
 
+```bash
 {
     "name": "alaamy",
     "price": 110
 }
+```
