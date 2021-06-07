@@ -1,5 +1,7 @@
 # Football Playground Reservation Backend
 
+## Getting Started
+
 ### Installing Dependencies
 
 #### Python 3.7
@@ -51,3 +53,38 @@ python manage.py runserver
 4. `fb/member`
 5. `fb/member/<int:pk>`
 6. `fb/member/login`
+
+### How To Use The API
+
+to create a new user send a POST request with json body like:
+
+{
+    "username": "ahmed7",
+    "password": "0000",
+    "email": "a7@fun.me",
+    "is_owner": true,
+    "phone": "010213554"
+} 
+
+and to login use :
+
+{
+    "username": "ahmed",
+    "password": "0000"
+}
+
+to update the user info use a PUT request with json body as :
+
+{
+    "username": "ahmed7",
+    "password": "0000",
+    "phone": "010213555"
+}
+NOTE: your request must at least contain username and password keys  
+
+to add new playgroun ensure you are login with an owner account and use a POST request with json body as:
+
+{
+    "name": "alaamy",
+    "price": 110
+}
