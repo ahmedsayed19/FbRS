@@ -50,44 +50,173 @@ python manage.py runserver
 1. `fb/playgrounds`
 2. `fb/playgrounds/<int:pk>`
 3. `fb/reverse_h/<int:pk>`
-4. `fb/member`
-5. `fb/member/<int:pk>`
-6. `fb/member/login`
+4. `fb/member/login`
+5. `fb/register`
 
-### How To Use The API
+## API Reference
+### General
+- Base URL: this app is hosted locally under the port 8000. The API base URL is `http://localhost:8000/fb`
+- Authentication: this uses Basic authentication with username and password.
+- You must set the header: `Content-Type: application/json` with every request a.
+### Endpoints
 
+#### 1. POST `/playgrounds`
 to create a new user send a POST request with json body like:
-```bash
-{
-    "username": "ahmed7",
-    "password": "0000",
-    "email": "a7@fun.me",
-    "is_owner": true,
-    "phone": "010213554"
-} 
+
+example of request:
+```bash 
+curl -X POST https://fbrs.herokuapp.com/fb/playgrounds
+	 -H "Content-Type: application/json" 
+     -d 
+    "{
+        \"name\": \"CleverPG\", 
+        \"price\":100, 
+        \"description\":\"ooh yeah\", 
+        \"address\": \"I am still just an idea in developers heads\"
+    }"
+	 --user "ahmed:password"
 ```
-and to login use :
+response:
 ```bash
 {
-    "username": "ahmed",
-    "password": "0000"
+    "id": 5,
+    "name": "el-mesala",
+    "photo": null,
+    "price": 130,
+    "description": "Wonderfull playground",
+    "address": "Fayoum, el-mesala",
+    "owner": 65
 }
 ```
-to update the user info use a PUT request with json body as :
+
+#### 2. GET `/playgrounds`
+example of request: 
 ```bash
-{
-    "username": "ahmed7",
-    "password": "0000",
-    "phone": "010213555"
-}
+`curl https://fbrs.herokuapp.com/fb/playgrounds
+	 -H "Content-Type: application/json"`
+response:
 ```
-NOTE: your request must at least contain username and password keys  
-
-to add new playgroun ensure you are login with an owner account and use a POST request with json body as:
-
 ```bash
-{
+[{
+    "id": 1,
+    "name": "CleverPG",
+    "photo": null,
+    "price": 100,
+    "description": "ooh yeah",
+    "address": "I am still just an idea in developers heads",
+    "owner": 65
+}, {
+    "id": 2,
     "name": "alaamy",
-    "price": 110
+    "photo": null,
+    "price": 110,
+    "description": "A  good Playground for you",
+    "address": "Lower body, in your foot",
+    "owner": 65
+}]
+```
+#### 3. PUT `/playgrounds/<int:pk>`
+example of request:
+```bash 
+`curl -X PUT https://fbrs.herokuapp.com/fb/playgrounds/1
+	-H "Content-Type: application/json" 
+    -d 
+    "{
+        \"name\": \"CleverPG\", 
+        \"price\":100, 
+        \"description\":\"ooh yeah\", 
+        \"address\": \"I am still just an idea in developers heads\"
+    }"
+	--user "ahmed:password"`
+```
+#### 4. PUT `/playgrounds/<int:pk>`
+example of request:
+```bash
+curl -X DELETE https://fbrs.herokuapp.com/fb/playgrounds/7
+	 -H "Content-Type: application/json"
+     -u "ali:password"
+```
+response:
+status = 204 no content
+
+#### 5. PUT `/member/`
+example of request:
+```bash 
+`curl -X PUT https://fbrs.herokuapp.com/fb/member/
+	-H "Content-Type: application/json" 
+    -d 
+    "{
+        \"username\": \"ahmed\",
+        \"password\": \"password\",
+        \"email\": \"a7@fuck.me\",
+        \"is_player\": true,
+        \"phone\": \"010213555\"
+    }"
+	--user "ahmed:password"`
+```
+response:
+```bash 
+{
+    "id": 66,
+    "username": "ahmed",
+    "email": "a7@fuck.me",
+    "profile_pic": null,
+    "phone": "010213555",
+    "is_owner": false,
+    "is_player": true
 }
 ```
+
+
+#### 5. POST `/reserve_an_h/<int:PG_pk>`
+you send one value which is `reserved hour` as 
+"3 2 2021 5" => "month day year hour"
+example of request:
+
+```bash 
+`curl -X POST https://fbrs.herokuapp.com/fb/reserve_an_h/1
+	-H "Content-Type: application/json" 
+    -d 
+    "{
+        \"reserved_h\": \"3 2 2021 5"\"
+    }"
+	--user "ahmed:password"`
+```
+response:
+```bash
+{
+    "id": 9,
+    "reserved_hour": "2021-03-02T11:00:00Z",
+    "playground_id": 1,
+    "player": 73
+}
+```
+
+#### 5. GET `/reserved_hs/<int:PG_pk>`
+
+example of request:
+
+```bash 
+`curl https://fbrs.herokuapp.com/fb/reserved_hs/1
+	-H "Content-Type: application/json" 
+```
+response:
+
+```bash 
+[
+    {
+        "id": 8,
+        "reserved_hour": "2021-03-02T05:00:00Z",
+        "playground_id": 1,
+        "player": 73
+    },
+    {
+        "id": 9,
+        "reserved_hour": "2021-03-02T11:00:00Z",
+        "playground_id": 1,
+        "player": 73
+    }
+]
+```
+
+
