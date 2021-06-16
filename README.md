@@ -129,7 +129,7 @@ example of request:
     }"
 	--user "ahmed:password"`
 ```
-#### 4. PUT `/playgrounds/<int:pk>`
+#### 4. DELETE `/playgrounds/<int:pk>`
 example of request:
 ```bash
 curl -X DELETE https://fbrs.herokuapp.com/fb/playgrounds/7
@@ -138,34 +138,6 @@ curl -X DELETE https://fbrs.herokuapp.com/fb/playgrounds/7
 ```
 response:
 status = 204 no content
-
-#### 5. PUT `/member/`
-example of request:
-```bash 
-`curl -X PUT https://fbrs.herokuapp.com/fb/member/
-	-H "Content-Type: application/json" 
-    -d 
-    "{
-        \"username\": \"ahmed\",
-        \"password\": \"password\",
-        \"email\": \"a7@fuck.me\",
-        \"is_player\": true,
-        \"phone\": \"010213555\"
-    }"
-	--user "ahmed:password"`
-```
-response:
-```bash 
-{
-    "id": 66,
-    "username": "ahmed",
-    "email": "a7@fuck.me",
-    "profile_pic": null,
-    "phone": "010213555",
-    "is_owner": false,
-    "is_player": true
-}
-```
 
 
 #### 5. POST `/reserve_an_h/<int:PG_pk>`
