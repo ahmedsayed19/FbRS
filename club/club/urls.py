@@ -18,13 +18,17 @@ from django.urls import path, include
 
 api_url = [
     path('', include('football.urls')),
-    path(
-        'api-auth',
-        include('rest_framework.urls', namespace='rest_framework')
-    )
+    # path(
+    #     'api-auth',
+    #     include('rest_framework.urls', namespace='rest_framework')
+    # )
 ]
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path(
+        'api-auth/',
+        include('rest_framework.urls', namespace='rest_framework')
+    ),
     path('fb/', include(api_url)),
 ]
