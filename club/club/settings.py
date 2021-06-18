@@ -83,10 +83,10 @@ WSGI_APPLICATION = 'club.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd2ti4i3aq12msj',
-        'USER': 'ysbsixmkwwtvnk',
-        'PASSWORD': '3edc1d8e6939096eaeaa5ce7f80a2e96ac7ea6f974a932a497ad55c06a4ed4a9',
-        'HOST': 'ec2-34-232-191-133.compute-1.amazonaws.com',
+        'NAME': 'football',
+        'USER': 'postgres',
+        'PASSWORD': '0000',
+        'HOST': '127.0.0.1',
         'PORT': '5432'
     }
 }
