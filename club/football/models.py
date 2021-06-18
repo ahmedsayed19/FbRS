@@ -15,12 +15,25 @@ class ClubMember(AbstractUser):
     def __test__(self):
         return f"{self.username} {self.email} {self.profile_pic}"
 
+    
+
 class Playgrounds (models.Model):
-    __name__ = 'playgrounds'
-    # id = models.IntegerField(primary_key=True, serialize=True)
-    name  = models.CharField(max_length=255)
+    '''
+    CREATE TABLE Playgrounds (
+        name VARCHAR(255) UNIQUE,
+        photo VARCHAR(255),
+        price INT,
+        description VARCHAR(300),
+        address VARCHAR(200),
+        FOREIGN KEY (owner)
+        REFERENCES ClubMember (id)
+    );
+    '''
+    name  = models.CharField(max_length=255, unique=True)
     photo = models.ImageField(max_length=255, null=True)
     price = models.IntegerField()
+    description = models.CharField(max_length=300, default='', null=True)
+    address = models.CharField(max_length=200, default='', null=True)
     owner = models.ForeignKey(ClubMember, on_delete=CASCADE, null=False)
 
 class ReservedHours (models.Model):
