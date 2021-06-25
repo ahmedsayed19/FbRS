@@ -51,9 +51,24 @@ def login(request):
 @api_view(['get', 'post'])
 def get_post_playgrounds(request):
     if request.method == 'GET':
-        pgs = Playgrounds.objects.all()
-        serializer = PGsSerializer(pgs, many=True)
-        return Response(serializer.data)
+        pg_with_names = Playgrounds.objects.raw(
+            '''
+                SELECT football_playgrounds.id, name, photo, price, description, address, owner_id, football_clubmember.username FROM football_playgrounds JOIN football_clubmember on football_playgrounds.owner_id = football_clubmember.id
+            '''
+        )
+        data = []
+        for pg in pg_with_names:
+            data.append({
+                "id": pg.id,
+                "name": pg.name,
+                "photo": pg.photo or None,
+                "price": pg.price,
+                "description": pg.description,
+                "address": pg.address,
+                "owner": pg.owner_id,
+                "owner_name": pg.username
+            })
+        return Response(data)
         # return Response({})
     if request.method == 'POST':
         try:
@@ -89,12 +104,24 @@ def put_get_delete_playground(request, pk):
         playground = Playgrounds.objects.get(pk=pk)
         
     except Playgrounds.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = PGsSerializer(playground)
-        
-        return Response(serializer.data)
+        # owner_name = ClubMember.objects.get(pk=playground.owner).username
+        res_hours_with_names = ReservedHours.objects.raw("SELECT football_reservedhours.id, playground_id_id, reserved_hour, player_id, football_clubmember.username FROM football_reservedhours JOIN football_clubmember ON football_reservedhours.player_id=football_clubmember.id WHERE  football_reservedhours.playground_id_id = %s", [pk])
+        rh_data = []
+        for res_hour in res_hours_with_names:
+            rh_data.append({
+                "reserved_hour": res_hour.reserved_hour,
+                "playground_id": res_hour.playground_id_id,
+                "player": res_hour.player_id,
+                "player_name": res_hour.username
+            })
+        pg_serializer = PGsSerializer(playground)
+        data = pg_serializer.data
+        data['owner_name'] = playground.owner.username
+        data['reserved_hour'] = rh_data
+        return Response(data)
 
     # Updated to check that the request from the playground owner
     try:
@@ -152,7 +179,7 @@ def reserve_an_hour(request, pk):
         member = ClubMember.objects.get(username=request.user)
     except ClubMember.DoesNotExist:
         return Response(status.HTTP_403_FORBIDDEN)
-    date = datetime.strptime(request.data.get('reserved_hour'), '%m %d %Y %I')
+    date = datetime.strptime(request.data.get('reserved_hour'), '%m %d %Y %H')
     data = {
         'playground_id': pk,
         'reserved_hour': date,
@@ -164,8 +191,10 @@ def reserve_an_hour(request, pk):
     serializer = RHSerializer(data=data)
     if serializer.is_valid():
         serializer.save()
-        return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        res_data = serializer.data
+        res_data['player_name'] = member.username
+        return Response(res_data, status.HTTP_201_CREATED)
+    return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
     
 @api_view(['get'])
 def reserved_hours(request, pk):
@@ -185,3 +214,4 @@ def post_member(request):
         return Response(serializer.data, status.HTTP_201_CREATED)
     return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
+# "SELECT football_reservedhours.id, playground_id_id reserved_hour, player_id, football_clubmember.username FROM football_reservedhours JOIN football_clubmember ON football_reservedhours.playground_id_id=football_clubmember.id WHERE football_reservedhours.playground_id_id = %s"

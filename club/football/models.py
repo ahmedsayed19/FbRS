@@ -34,7 +34,7 @@ class Playgrounds (models.Model):
     price = models.IntegerField()
     description = models.CharField(max_length=300, default='', null=True)
     address = models.CharField(max_length=200, default='', null=True)
-    owner = models.ForeignKey(ClubMember, on_delete=CASCADE, null=False)
+    owner = models.ForeignKey(ClubMember, on_delete=CASCADE, null=False, related_name='playground')
 
 class ReservedHours (models.Model):
     __name__ = 'reservedhours'
